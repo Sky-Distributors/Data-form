@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Form Data</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Form Submission Data</h1>
+    <table id="formData">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Location</th>
+                <th>Query</th>
+                <th>Action</th> <!-- New column for delete button -->
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        // Retrieve form data array from localStorage
+        var formDataArray = JSON.parse(localStorage.getItem("formDataArray")) || [];
+
+        // Function to delete a row
+        function deleteRow(rowIndex) {
+            formDataArray.splice(rowIndex, 1); // Remove the item from the array
+            localStorage.setItem("formDataArray", JSON.stringify(formDataArray)); // Update localStorage
+            displayFormData(); // Re-display the table
+        }
+
+        // Function to display form data in the table
+        function displayFormData() {
+            var tableBody = document.querySelector("#formData tbody");
+            tableBody.innerHTML = ""; // Clear existing rows
+
+            formDataArray.forEach(function(formData, index) {
+                var row = tableBody.insertRow();
+                row.insertCell().textContent = formData.Name;
+                row.insertCell().textContent = formData.Email;
+                row.insertCell().textContent = formData.Contact;
+                row.insertCell().textContent = formData.Location;
+                row.insertCell().textContent = formData.Query;
+                var deleteCell = row.insertCell();
+                var deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.className = "delete-button";
+                deleteButton.onclick = function() {
+                    deleteRow(index); // Call deleteRow function with the row index
+                };
+                deleteCell.appendChild(deleteButton);
+            });
+        }
+
+        // Display initial form data
+        displayFormData();
+    </script>
+</body>
+</html>
